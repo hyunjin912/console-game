@@ -18,4 +18,9 @@ class Character {
   void defend() {}
 
   void showStatus() {}
+
+  @override
+  String toString() {
+    return 'Character {name: $name, hp: $hp, atk: $atk, def: $def}';
+  }
 }
