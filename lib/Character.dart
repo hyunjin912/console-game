@@ -21,7 +21,7 @@ class Character {
   void defend() {}
 
   void showStatus() {
-    print('$name - 체력: $hp, 공격력: $atk, 방어력: $def\n');
+    print('$name - 체력: $hp, 공격력: $atk, 방어력: $def');
   }
 
   @override

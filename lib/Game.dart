@@ -9,6 +9,7 @@ class Game {
   late Character character;
   List<String> characterInitialValue = [];
   List<Monster> monsters = [];
+  late Monster currentMonster;
   int huntingCount = 0;
   late String characterName;
 
@@ -39,12 +40,12 @@ class Game {
     RegExp nameRegexp = RegExp(r'^[a-zA-Z]+$');
 
     // while (isStart) {
-    stdout.write('캐릭터의 이름을 영어로 입력하세요: ');
-    characterName = stdin.readLineSync()!;
+    stdout.write('\n캐릭터의 이름을 영어로 입력하세요: ');
+    String characterName = stdin.readLineSync()!;
 
     try {
       if (!nameRegexp.hasMatch(characterName)) {
-        throw Customexception('\n캐릭터의 이름이 영어가 아니므로 재시작합니다.\n');
+        throw Customexception('\n캐릭터의 이름이 영어가 아니므로 재시작합니다.');
       }
 
       character = Character(
@@ -54,10 +55,14 @@ class Game {
         def: int.parse(characterInitialValue[2]),
       );
 
+      currentMonster = getRandomMonster();
+
       print('\n게임을 시작합니다!');
       character.showStatus();
+      print('새로운 몬스터가 나타났습니다!');
+      currentMonster.showStatus();
 
-      battle();
+      battle(); // 이 메서드에 while로 랩핑하면 battle내에서 에러가 뜨면 지금 여기의 catch문이 동작해서 startGame이 다시 시작되므로 하면 안될 듯
     } catch (e) {
       print(e);
       startGame();
@@ -66,17 +71,9 @@ class Game {
   }
 
   void battle() {
-    Monster currentMonster = getRandomMonster();
-    Map<String, String> turn = {'who': 'character'};
+    try {
+      print('${character.name}의 턴');
 
-    print('새로운 몬스터가 나타났습니다!');
-    currentMonster.showStatus();
-
-    // while 쓰지말고 여기는 캐릭터의 턴만 쓰고
-    // 대신 몬스터의 메서드는 빼고
-    print('$characterName의 턴');
-
-    while (true) {
       stdout.write('행동을 선택하세요 (1: 공격, 2: 방어): ');
       String actionNumber = stdin.readLineSync()!;
 
@@ -84,25 +81,26 @@ class Game {
         case '1':
           print('\n여기는 1번입니다.\n');
           character.attackMonster(currentMonster);
-          currentMonster.attackCharacter(character);
-
-          character.showStatus();
-          currentMonster.showStatus();
           break;
         case '2':
-          print('$characterName이(가) 방어 태세를 취하여 0 만큼 체력을 얻었습니다.\n');
+          print('${character.name}이(가) 방어 태세를 취하여 0 만큼 체력을 얻었습니다.\n');
           break;
         default:
-          print('\n일치하는 행동이 없습니다.\n');
+          throw Customexception('\n일치하는 행동이 없습니다.\n');
       }
+
+      print('\n${currentMonster.name}의 턴');
+      currentMonster.attackCharacter(character);
+      print('[ 진행상황 ]');
+      character.showStatus();
+      currentMonster.showStatus();
+      print('-----------------------------------');
+
+      battle();
+    } catch (e) {
+      print(e);
+      battle();
     }
-
-    // 여기는 몬스터의 턴만 쓰면 되지 않나?
-    // 위에서 캐릭터 턴이 끝나면 이 부분이 시작되면 되고
-
-    // 이 부분 통째로 반복만 하면 되니
-    // 60라인에서 battle()를 while문으로 감싸면 되지 않나?
-    // 그리고 72,73을 59로 잘라내기 하면 되지 않나?
   }
 
   Monster getRandomMonster() {
