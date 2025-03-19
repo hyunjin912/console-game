@@ -73,7 +73,7 @@ class Game {
     while (isBattle) {
       try {
         if (character.hp <= 0) {
-          print('${character.name}이(가) 사망하였습니다.');
+          print('${character.name}이(가) 사망하여 모험을 종료합니다.');
           return;
         }
 
@@ -120,10 +120,11 @@ class Game {
         switch (actionNumber) {
           case '1':
             character.attackMonster(currentMonster);
-            if (currentMonster.hp == 0) continue;
+            if (currentMonster.hp <= 0) continue;
             break;
           case '2':
-            print('${character.name}이(가) 방어 태세를 취하여 0 만큼 체력을 얻었습니다.');
+            character.defend(currentMonster);
+            if (character.hp <= 0) continue;
             break;
           default:
             throw Customexception('\n일치하는 행동이 없습니다.\n');

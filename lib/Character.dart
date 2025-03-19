@@ -20,7 +20,10 @@ class Character {
   }
 
   /// 몬스터의 공격으로부터 방어를 하기 위한 메서드
-  void defend() {}
+  void defend(Monster monster) {
+    hp += (monster.atk - def);
+    print('$name이(가) 방어 태세를 취하여 ${monster.atk - def}만큼 체력을 얻었습니다.');
+  }
 
   /// 행동(턴)이 끝난 후 캐릭터의 상태를 보여주기 위한 메서드
   void showStatus() {
