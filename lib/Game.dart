@@ -72,7 +72,12 @@ class Game {
 
     while (isBattle) {
       try {
-        if (currentMonster.hp == 0) {
+        if (character.hp <= 0) {
+          print('${character.name}이(가) 사망하였습니다.');
+          return;
+        }
+
+        if (currentMonster.hp <= 0) {
           if (monsters.isEmpty) {
             print('\n축하합니다! 모든 몬스터를 물리쳤습니다.');
             stdout.write('모험을 저장하시겠습니까? (y/n): ');
@@ -81,15 +86,14 @@ class Game {
             switch (resultStage) {
               case 'y':
                 createData('${character.name}, ${character.hp}, 승리');
-                break;
+                return;
               case 'n':
                 print('\n${character.name}의 모험이 끝났습니다.');
                 print('비록, 모험의 기록은 남지 않더라도 당신의 모험은 구전될 것입니다.');
-                break;
+                return;
               default:
                 throw Customexception('\n${character.name}의 의지를 정확히 알려주세요.');
             }
-            return;
           }
 
           stdout.write('\n다음 몬스터와 싸우시겠습니까? (y/n): ');
@@ -130,7 +134,7 @@ class Game {
         print('\n[ 진행상황 ]');
         character.showStatus();
         currentMonster.showStatus();
-        print('\n-----------------------------------');
+        print('-----------------------------------');
       } catch (e) {
         print(e);
       }
