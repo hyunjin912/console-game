@@ -6,7 +6,7 @@ String getData(String path) {
     String file = File(path).readAsStringSync();
     return file;
   } catch (e) {
-    print('데이터를 불러오는데 실패했습니다.');
+    print('영웅을 불러오는데 실패했습니다.');
     exit(1); // 터미널 실행 종료 함수(에러일 때 매개변수 1)
   }
 }
@@ -16,7 +16,7 @@ void createData(String contents) async {
     File file = await File('lib/result.txt').writeAsString(contents);
     print('당신의 모험을 기록으로 남겼습니다.');
   } catch (e) {
-    print('데이터 저장을 실패했습니다.');
+    print('모험의 기록을 실패했습니다.');
     exit(1); // 터미널 실행 종료 함수(에러일 때 매개변수 1)
   }
 }
