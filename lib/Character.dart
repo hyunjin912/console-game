@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:console_game/Monster.dart';
 
 /// 캐릭터를 만들기 위한 클래스
@@ -28,6 +30,16 @@ class Character {
   /// 행동(턴)이 끝난 후 캐릭터의 상태를 보여주기 위한 메서드
   void showStatus() {
     print('$name - 체력: $hp, 공격력: $atk, 방어력: $def');
+  }
+
+  /// 보너스 체력을 제공하는 메서드
+  void getLockyHp() {
+    int random = Random().nextInt(10);
+
+    if (random < 3) {
+      hp += 10;
+      print('보너스 체력을 얻었습니다! 현재 체력: $hp');
+    }
   }
 
   // print()로 캐릭터의 속성을 보기 위해 오버라이딩

@@ -54,10 +54,12 @@ class Game {
         throw Customexception('\n캐릭터의 이름이 영어가 아니므로 재시작합니다.');
       }
 
+      // 캐릭터 이름과 랜덤 몬스터 설정
       character.name = characterName;
       currentMonster = getRandomMonster();
 
       print('\n게임을 시작합니다!');
+      character.getLockyHp(); // 30%확률로 체력 보너스 제공
       character.showStatus();
       print('\n새로운 몬스터가 나타났습니다!');
       currentMonster.showStatus();
@@ -129,7 +131,7 @@ class Game {
             if (character.hp <= 0) continue;
             break;
           default:
-            throw Customexception('\n일치하는 행동이 없습니다.\n');
+            throw Customexception('\n일치하는 행동이 없습니다.');
         }
 
         // 몬스터의 턴일 때의 기본 동작
