@@ -11,7 +11,6 @@ class Game {
   late Monster currentMonster;
   int huntingCount = 0;
   late String characterName;
-  bool isBattle = true;
 
   // 생성자. 캐릭터와 몬스터의 데이터를 가져오며 해당되는 인스턴스 변수에 값을 초기화 한다.
   Game() {
@@ -79,11 +78,11 @@ class Game {
     String nextStage;
 
     // 특정 조건이 성립하기 전까지 무한 loop를 돌면서 전투를 진행
-    while (isBattle) {
+    while (true) {
       try {
         // 캐릭터의 체력이 0 이하일 때
         if (character.hp <= 0) {
-          print('${character.name}이(가) 사망하여 모험을 종료합니다.');
+          print('\n${character.name}이(가) 사망하여 모험을 종료합니다.');
           saveGame();
           return;
         }
@@ -93,8 +92,7 @@ class Game {
           if (monsters.isEmpty) {
             print('\n축하합니다! 모든 몬스터를 물리쳤습니다.');
             saveGame();
-
-            if (!isBattle) return;
+            return;
           }
 
           // 다음 진행을 위해 사용자에게 물어보고, 대답에 대한 상황 작성
@@ -129,7 +127,7 @@ class Game {
 
         switch (actionNumber) {
           case '1':
-            character.attackMonster(monster: currentMonster);
+            character.attackMonster(monster: currentMonster, increase: 0);
             if (currentMonster.hp <= 0) continue;
             break;
           case '2':
@@ -193,7 +191,5 @@ class Game {
       default:
         throw Customexception('\n${character.name}의 의지를 정확히 알려주세요.');
     }
-
-    isBattle = false;
   }
 }
