@@ -11,6 +11,7 @@ String getData(String path) {
   }
 }
 
+/// 파일로 만들어주는 함수
 void createData(String contents) async {
   try {
     File file = await File('lib/result.txt').writeAsString(contents);

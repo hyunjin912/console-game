@@ -25,18 +25,20 @@ class Monster {
     int realAtk = atk - character.def;
     character.hp -= realAtk;
 
-    print('$name이(가) ${character.name}에게 $realAtk의 데미지를 입혔습니다.');
+    print(
+      '\x1B[32m$name\x1B[0m이(가) \x1B[31m${character.name}\x1B[0m에게 $realAtk의 데미지를 입혔습니다.',
+    );
   }
 
   /// 행동(턴)이 끝난 후 몬스터의 상태를 보여주기 위한 메서드
   void showStatus() {
-    print('$name - 체력: $hp, 공격력: $atk, 방어력: $def');
+    print('\x1B[32m$name\x1B[0m - 체력: $hp, 공격력: $atk, 방어력: $def');
   }
 
   /// 몬스터의 방어력을 증가시키는 메서드
   void increaseDef({required int amount}) {
     def += amount;
-    print('\n$name의 방어력이 증가했습니다! 현재 방어력: $def');
+    print('\n\x1B[32m$name\x1B[0m의 방어력이 증가했습니다! 현재 방어력: $def');
   }
 
   // print()로 몬스터의 속성을 보기 위해 오버라이딩
