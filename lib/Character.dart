@@ -8,15 +8,20 @@ class Character {
   int hp;
   int atk;
   int def;
+  bool isItemActive = false; // 아이템 사용 여부. false = 사용하지 않은 상태
 
   Character({required this.hp, required this.atk, required this.def});
 
   /// 몬스터를 공격하는 메서드
-  void attackMonster(Monster monster) {
-    monster.hp -= atk;
-    print('$name이(가) ${monster.name}에게 $atk의 데미지를 입혔습니다.');
+  void attackMonster({required Monster monster, int increase = 1}) {
+    if (increase == 2) {
+      print('아이템을 사용했습니다. 공격력이 1턴 동안 2배가 됩니다! 현재 공격력: ${atk * increase}\n');
+    }
 
-    if (monster.hp == 0) {
+    monster.hp -= (atk * increase);
+    print('$name이(가) ${monster.name}에게 ${atk * increase}의 데미지를 입혔습니다.');
+
+    if (monster.hp <= 0) {
       print('${monster.name}을(를) 물리쳤습니다!');
     }
   }
