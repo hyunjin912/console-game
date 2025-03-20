@@ -30,7 +30,13 @@ class Monster {
 
   /// 행동(턴)이 끝난 후 몬스터의 상태를 보여주기 위한 메서드
   void showStatus() {
-    print('$name - 체력: $hp, 공격력: $atk');
+    print('$name - 체력: $hp, 공격력: $atk, 방어력: $def');
+  }
+
+  /// 몬스터의 방어력을 증가시키는 메서드
+  void increaseDef({required int amount}) {
+    def += amount;
+    print('\n$name의 방어력이 증가했습니다! 현재 방어력: $def');
   }
 
   // print()로 몬스터의 속성을 보기 위해 오버라이딩

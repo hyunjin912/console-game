@@ -76,6 +76,7 @@ class Game {
   /// 턴을 교환해가며 전투가 진행되게 하는 메서드
   void battle() {
     String nextStage;
+    int halfTurnCount = 0;
 
     // 특정 조건이 성립하기 전까지 무한 loop를 돌면서 전투를 진행
     while (true) {
@@ -104,6 +105,7 @@ class Game {
               currentMonster = getRandomMonster();
               print('\n새로운 몬스터가 나타났습니다!');
               currentMonster.showStatus();
+              halfTurnCount = 0;
               break;
             case 'n':
               print('\n${character.name}의 모험이 끝났습니다.');
@@ -125,9 +127,14 @@ class Game {
         }
         String actionNumber = stdin.readLineSync()!;
 
+        if (halfTurnCount >= 3) {
+          currentMonster.increaseDef(amount: 2);
+          halfTurnCount -= 3;
+        }
+
         switch (actionNumber) {
           case '1':
-            character.attackMonster(monster: currentMonster, increase: 0);
+            character.attackMonster(monster: currentMonster);
             if (currentMonster.hp <= 0) continue;
             break;
           case '2':
@@ -141,16 +148,24 @@ class Game {
               character.attackMonster(monster: currentMonster, increase: 2);
               if (currentMonster.hp <= 0) continue;
             } else {
-              throw Customexception('\n일치하는 행동이 없습니다.');
+              throw Customexception('\n${character.name}의 의지를 정확히 알려주세요.');
             }
             break;
           default:
-            throw Customexception('\n일치하는 행동이 없습니다.');
+            throw Customexception('\n${character.name}의 의지를 정확히 알려주세요.');
         }
+
+        // 사용자의 턴이 끝났으니 카운트 증가
+        // 사용자 턴 시작일 때 증가하면 안됨
+        // 이유는 에러 후에 턴이 다시 시작되니까 그때마다 증가하는 것을 방지해야함
+        halfTurnCount++;
 
         // 몬스터의 턴일 때의 기본 동작
         print('\n${currentMonster.name}의 턴');
         currentMonster.attackCharacter(character);
+
+        // 몬스터의 턴이 끝났으니 카운트 증가
+        halfTurnCount++;
 
         // 턴을 교환한 후의 상태를 보여줌
         print('\n[ 진행상황 ]');

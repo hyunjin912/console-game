@@ -14,12 +14,18 @@ class Character {
 
   /// 몬스터를 공격하는 메서드
   void attackMonster({required Monster monster, int increase = 1}) {
+    int realAtk = (atk * increase) - monster.def;
+
+    if (realAtk <= 0) {
+      realAtk = 0;
+    }
+
     if (increase == 2) {
       print('아이템을 사용했습니다. 공격력이 1턴 동안 2배가 됩니다! 현재 공격력: ${atk * increase}\n');
     }
 
-    monster.hp -= (atk * increase);
-    print('$name이(가) ${monster.name}에게 ${atk * increase}의 데미지를 입혔습니다.');
+    monster.hp -= realAtk;
+    print('$name이(가) ${monster.name}에게 $realAtk의 데미지를 입혔습니다.');
 
     if (monster.hp <= 0) {
       print('${monster.name}을(를) 물리쳤습니다!');
@@ -43,7 +49,7 @@ class Character {
 
     if (random < 3) {
       hp += 10;
-      print('보너스 체력을 얻었습니다! 현재 체력: $hp');
+      print('\n보너스 체력을 얻었습니다! 현재 체력: $hp');
     }
   }
 
