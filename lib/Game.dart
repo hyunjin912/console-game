@@ -118,17 +118,33 @@ class Game {
 
         // 캐릭터의 턴일 때의 기본 동작
         print('\n${character.name}의 턴');
-        stdout.write('행동을 선택하세요 (1: 공격, 2: 방어): ');
+        if (character.isItemActive) {
+          // 아이템 사용 후
+          stdout.write('행동을 선택하세요 (1: 공격, 2: 방어): ');
+        } else {
+          // 아이템 사용 전
+          stdout.write('행동을 선택하세요 (1: 공격, 2: 방어, 3: 아이템 사용): ');
+        }
         String actionNumber = stdin.readLineSync()!;
 
         switch (actionNumber) {
           case '1':
-            character.attackMonster(currentMonster);
+            character.attackMonster(monster: currentMonster);
             if (currentMonster.hp <= 0) continue;
             break;
           case '2':
             character.defend(currentMonster);
             if (character.hp <= 0) continue;
+            break;
+          case '3':
+            if (!character.isItemActive) {
+              // 아이템 사용 전
+              character.isItemActive = true;
+              character.attackMonster(monster: currentMonster, increase: 2);
+              if (currentMonster.hp <= 0) continue;
+            } else {
+              throw Customexception('\n일치하는 행동이 없습니다.');
+            }
             break;
           default:
             throw Customexception('\n일치하는 행동이 없습니다.');
@@ -172,8 +188,7 @@ class Game {
         createData('이름: ${character.name}, 체력: ${character.hp}, 결과: $re');
         break;
       case 'n':
-        print('\n${character.name}의 모험이 끝났습니다.');
-        print('비록, 모험의 기록은 남지 않더라도 당신의 모험은 구전될 것입니다.');
+        print('\n비록, 모험의 기록은 남지 않더라도 당신의 모험은 구전될 것입니다.');
         break;
       default:
         throw Customexception('\n${character.name}의 의지를 정확히 알려주세요.');
