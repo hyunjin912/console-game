@@ -83,7 +83,7 @@ class Game {
       try {
         // 캐릭터의 체력이 0 이하일 때
         if (character.hp <= 0) {
-          print('\n${character.name}이(가) 사망하여 모험을 종료합니다.');
+          print('\n\x1B[31m${character.name}\x1B[0m이(가) 사망하여 모험을 종료합니다.');
           saveGame();
           return;
         }
@@ -108,16 +108,18 @@ class Game {
               halfTurnCount = 0;
               break;
             case 'n':
-              print('\n${character.name}의 모험이 끝났습니다.');
+              print('\n\x1B[31m${character.name}\x1B[0m의 모험이 끝났습니다.');
               saveGame();
               return;
             default:
-              throw Customexception('\n${character.name}의 의지를 정확히 알려주세요.');
+              throw Customexception(
+                '\n\x1B[31m${character.name}\x1B[0m의 의지를 정확히 알려주세요.',
+              );
           }
         }
 
         // 캐릭터의 턴일 때의 기본 동작
-        print('\n${character.name}의 턴');
+        print('\n\x1B[31m${character.name}\x1B[0m의 턴');
         if (character.isItemActive) {
           // 아이템 사용 후
           stdout.write('행동을 선택하세요 (1: 공격, 2: 방어): ');
@@ -129,7 +131,7 @@ class Game {
 
         if (halfTurnCount >= 3) {
           currentMonster.increaseDef(amount: 2);
-          halfTurnCount -= 3;
+          halfTurnCount = 0;
         }
 
         switch (actionNumber) {
@@ -148,11 +150,15 @@ class Game {
               character.attackMonster(monster: currentMonster, increase: 2);
               if (currentMonster.hp <= 0) continue;
             } else {
-              throw Customexception('\n${character.name}의 의지를 정확히 알려주세요.');
+              throw Customexception(
+                '\n\x1B[31m${character.name}\x1B[0m의 의지를 정확히 알려주세요.',
+              );
             }
             break;
           default:
-            throw Customexception('\n${character.name}의 의지를 정확히 알려주세요.');
+            throw Customexception(
+              '\n\x1B[31m${character.name}\x1B[0m의 의지를 정확히 알려주세요.',
+            );
         }
 
         // 사용자의 턴이 끝났으니 카운트 증가
@@ -161,7 +167,11 @@ class Game {
         halfTurnCount++;
 
         // 몬스터의 턴일 때의 기본 동작
-        print('\n${currentMonster.name}의 턴');
+        print('\n\x1B[32m${currentMonster.name}\x1B[0m의 턴');
+        if (halfTurnCount >= 3) {
+          currentMonster.increaseDef(amount: 2);
+          halfTurnCount = 0;
+        }
         currentMonster.attackCharacter(character);
 
         // 몬스터의 턴이 끝났으니 카운트 증가
@@ -204,7 +214,9 @@ class Game {
         print('\n비록, 모험의 기록은 남지 않더라도 당신의 모험은 구전될 것입니다.');
         break;
       default:
-        throw Customexception('\n${character.name}의 의지를 정확히 알려주세요.');
+        throw Customexception(
+          '\n\x1B[31m${character.name}\x1B[0m의 의지를 정확히 알려주세요.',
+        );
     }
   }
 }

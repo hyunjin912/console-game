@@ -25,22 +25,26 @@ class Character {
     }
 
     monster.hp -= realAtk;
-    print('$name이(가) ${monster.name}에게 $realAtk의 데미지를 입혔습니다.');
+    print(
+      '\x1B[31m$name\x1B[0m이(가) \x1B[32m${monster.name}\x1B[0m에게 $realAtk의 데미지를 입혔습니다.',
+    );
 
     if (monster.hp <= 0) {
-      print('${monster.name}을(를) 물리쳤습니다!');
+      print('\x1B[32m${monster.name}\x1B[0m을(를) 물리쳤습니다!');
     }
   }
 
   /// 몬스터의 공격으로부터 방어를 하기 위한 메서드
   void defend(Monster monster) {
     hp += (monster.atk - def);
-    print('$name이(가) 방어 태세를 취하여 ${monster.atk - def}만큼 체력을 얻었습니다.');
+    print(
+      '\x1B[31m$name\x1B[0m이(가) 방어 태세를 취하여 ${monster.atk - def}만큼 체력을 얻었습니다.',
+    );
   }
 
   /// 행동(턴)이 끝난 후 캐릭터의 상태를 보여주기 위한 메서드
   void showStatus() {
-    print('$name - 체력: $hp, 공격력: $atk, 방어력: $def');
+    print('\x1B[31m$name\x1B[0m - 체력: $hp, 공격력: $atk, 방어력: $def');
   }
 
   /// 보너스 체력을 제공하는 메서드
