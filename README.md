@@ -41,3 +41,13 @@
 `해결과정` : 
 1. `async - await`키워드를 사용해 `async`함수 내에서는 동기적로 동작할 수 있게 변경
 2. 그러나 다시 타입 에러가 발생하여 타입을 변경하여 해결
+
+<br/>
+
+> <a href="https://skyhyunjinlee.tistory.com/entry/TIL-014-Dart%EB%A1%9C-%EC%BD%98%EC%86%94-%ED%85%8D%EC%8A%A4%ED%8A%B8-%EA%B2%8C%EC%9E%84-%EB%A7%8C%EB%93%A4%EA%B8%B0-2" target="_blank">`Random`클래스 호출 시 RangeError 발생</a>
+> 
+`문제상황` : 
+- `Random().nextInt(int)`호출 시 int가 0인 경우 RangeError 발생
+
+`해결과정` : 
+1. int가 0이 될 수 없게 조건문을 추가하여 해결
