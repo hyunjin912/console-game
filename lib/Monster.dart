@@ -5,10 +5,12 @@ import 'package:console_game/Character.dart';
 class Monster {
   String name;
   int hp;
+  late int initialHp;
   int def = 0;
   int atk = 0;
   int characterDef;
   int maxAtk;
+  bool isRunaway = false; // 도망 가능 여부. false = 도망 불가능 상태
 
   Monster({
     required this.name,
@@ -18,6 +20,7 @@ class Monster {
   }) {
     int random = Random().nextInt(maxAtk - characterDef + 1) + characterDef;
     atk = random;
+    initialHp = hp;
   }
 
   /// 캐릭터를 공격하는 메서드
@@ -39,6 +42,21 @@ class Monster {
   void increaseDef({required int amount}) {
     def += amount;
     print('\n\x1B[32m$name\x1B[0m의 방어력이 증가했습니다! 현재 방어력: $def');
+  }
+
+  /// 몬스터가 체력이 50%이하로 떨어질 경우 60%의 확률로 도망치게 하는 메서드
+  bool runaway() {
+    // 도망은 한 번만 가능
+    if (!isRunaway) {
+      int random = Random().nextInt(10);
+
+      // 0 ~ 5 = 60%
+      if (random < 6) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   // print()로 몬스터의 속성을 보기 위해 오버라이딩
