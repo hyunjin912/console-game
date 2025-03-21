@@ -12,7 +12,7 @@ class Game {
   int huntingCount = 0;
   late String characterName;
 
-  // 생성자. 캐릭터와 몬스터의 데이터를 가져오며 해당되는 인스턴스 변수에 값을 초기화 한다.
+  // 생성자. 캐릭터와 몬스터의 데이터를 가져오며 해당되는 인스턴스 변수에 값을 초기화한다.
   Game() {
     String characterData = getData('lib/characters.txt');
     String monsterData = getData('lib/monsters.txt');
@@ -87,8 +87,35 @@ class Game {
           saveGame();
           return;
         }
+
+        // 몬스터를 처치하면 monsters에서 삭제하는게 아니라
+        // getRandomMonster를 호출할 때 미리 삭제를 하기 때문에
+        // monsters.length가 0인 경우에도 동작하면
+        // getRandomMonster에서 Random().nextInt(0)을 호출해서 무한 에러가 발생하므로
+        // monsters.length가 1 이상 일 때만 동작해야 함
+        // 즉, 마지막 몬스터는 도망을 못하게 막기
+        if (monsters.isNotEmpty) {
+          // 도망을 한 번도 가지 않은 몬스터의 체력이 50% 이하일 때
+          if (!currentMonster.isRunaway &&
+              currentMonster.hp <= currentMonster.initialHp * 0.5) {
+            if (currentMonster.runaway()) {
+              print(
+                '\n이런! \x1B[32m${currentMonster.name}\x1B[0m이(가) 당신을 피해 도망칩니다!',
+              );
+
+              currentMonster = getRandomMonster(prevMonster: currentMonster);
+              print('\n새로운 몬스터가 나타났습니다!');
+              currentMonster.showStatus();
+              halfTurnCount = 0;
+            }
+          }
+        }
+
         // 몬스터의 체력이 0 이하일 때(=몬스터를 처치했을 때)
         if (currentMonster.hp <= 0) {
+          // 턴 초기화
+          halfTurnCount = 0;
+
           // 모든 몬스터를 처치했을 때
           if (monsters.isEmpty) {
             print('\n축하합니다! 모든 몬스터를 물리쳤습니다.');
@@ -105,7 +132,6 @@ class Game {
               currentMonster = getRandomMonster();
               print('\n새로운 몬스터가 나타났습니다!');
               currentMonster.showStatus();
-              halfTurnCount = 0;
               break;
             case 'n':
               print('\n\x1B[31m${character.name}\x1B[0m의 모험이 끝났습니다.');
@@ -137,7 +163,12 @@ class Game {
         switch (actionNumber) {
           case '1':
             character.attackMonster(monster: currentMonster);
-            if (currentMonster.hp <= 0) continue;
+            if (currentMonster.hp <= 0) {
+              // 도망가기를 사용하지 않은 몬스터가 처치됐으면
+              // true로 변경해야 도망기능이 동작하지 않는다
+              currentMonster.isRunaway = true;
+              continue;
+            }
             break;
           case '2':
             character.defend(currentMonster);
@@ -148,7 +179,12 @@ class Game {
               // 아이템 사용 전
               character.isItemActive = true;
               character.attackMonster(monster: currentMonster, increase: 2);
-              if (currentMonster.hp <= 0) continue;
+              if (currentMonster.hp <= 0) {
+                // 도망가기를 사용하지 않은 몬스터가 처치됐으면
+                // true로 변경해야 도망기능이 동작하지 않는다
+                currentMonster.isRunaway = true;
+                continue;
+              }
             } else {
               throw Customexception(
                 '\n\x1B[31m${character.name}\x1B[0m의 의지를 정확히 알려주세요.',
@@ -163,7 +199,8 @@ class Game {
 
         // 사용자의 턴이 끝났으니 카운트 증가
         // 사용자 턴 시작일 때 증가하면 안됨
-        // 이유는 에러 후에 턴이 다시 시작되니까 그때마다 증가하는 것을 방지해야함
+        // 이유는 사용자 턴에서 에러가 생기면 재시작 후에 턴이 다시 시작되니까
+        // 그때마다 증가하는 것을 방지해야함
         halfTurnCount++;
 
         // 몬스터의 턴일 때의 기본 동작
@@ -189,16 +226,21 @@ class Game {
   }
 
   /// 랜덤한 몬스터를 뽑기 위한 메서드
-  Monster getRandomMonster() {
+  Monster getRandomMonster({Monster? prevMonster}) {
     // 0 <= random < monsters.length
-    int random = Random().nextInt(monsters.length);
+    int random = prevMonster == null ? 0 : Random().nextInt(monsters.length);
     Monster currentMonster = monsters[random];
     monsters.removeAt(random);
+
+    if (prevMonster != null && !prevMonster.isRunaway) {
+      prevMonster.isRunaway = true;
+      monsters.add(prevMonster);
+    }
 
     return currentMonster;
   }
 
-  // 게임 결과를 저장하기 위한 메서드
+  /// 게임 결과를 저장하기 위한 메서드
   void saveGame() {
     String resultStage;
 
