@@ -14,8 +14,8 @@ class Game {
 
   // 생성자. 캐릭터와 몬스터의 데이터를 가져오며 해당되는 인스턴스 변수에 값을 초기화한다.
   Game() {
-    String characterData = getData('lib/characters.txt');
-    String monsterData = getData('lib/monsters.txt');
+    String characterData = getData('lib/assets/characters.txt');
+    String monsterData = getData('lib/assets/monsters.txt');
     RegExp monsterRegexp = RegExp(r'^[a-zA-Z]+,\d+,\d+$', multiLine: true);
     List<String> characterInitialValue = characterData.split(',');
     List<RegExpMatch> mInfo = monsterRegexp.allMatches(monsterData).toList();
